@@ -24,7 +24,8 @@ mysqli_query($conn, "CREATE TABLE IF NOT EXISTS users (
     alamat TEXT,
     no_telepon VARCHAR(20),
     email VARCHAR(100),
-    role ENUM('admin', 'user') DEFAULT 'user'
+    role ENUM('admin', 'user') DEFAULT 'user',
+    foto_profil VARCHAR(255) DEFAULT ''
 )");
 
 mysqli_query($conn, "CREATE TABLE IF NOT EXISTS products (

@@ -43,6 +43,12 @@ if(isset($_GET['del_product'])) {
 // Menarik Data
 $orders = mysqli_query($conn, "SELECT o.*, u.nama_lengkap FROM orders o JOIN users u ON o.id_pelanggan = u.id_pelanggan ORDER BY o.tanggal DESC");
 $products = mysqli_query($conn, "SELECT * FROM products ORDER BY id_produk DESC");
+$customers = mysqli_query($conn, "SELECT * FROM users WHERE role='user' ORDER BY id_pelanggan DESC");
+
+// Query Statistik
+$total_trx = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM orders WHERE DATE(tanggal) = CURDATE()"));
+$trx_selesai = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM orders WHERE status='Disetujui'"));
+$total_pelanggan = mysqli_num_rows($customers);
 ?>
 
 <div class="flex flex-col md:flex-row gap-6">
@@ -52,13 +58,31 @@ $products = mysqli_query($conn, "SELECT * FROM products ORDER BY id_produk DESC"
         <ul class="space-y-2">
             <li><a href="?p=admin&t=orders" class="block px-4 py-2 rounded-lg font-bold <?= $tab=='orders' ? 'bg-emerald-600' : 'hover:bg-stone-800' ?>">Pesanan Masuk</a></li>
             <li><a href="?p=admin&t=products" class="block px-4 py-2 rounded-lg font-bold <?= $tab=='products' ? 'bg-emerald-600' : 'hover:bg-stone-800' ?>">Kelola Produk</a></li>
+            <li><a href="?p=admin&t=customers" class="block px-4 py-2 rounded-lg font-bold <?= $tab=='customers' ? 'bg-emerald-600' : 'hover:bg-stone-800' ?>">Data Pelanggan</a></li>
         </ul>
     </div>
 
     <!-- Content Area -->
     <div class="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
         <?php if($tab == 'orders'): ?>
-            <h2 class="text-2xl font-black mb-4 border-b pb-3">Data Booking / Pesanan</h2>
+            <h2 class="text-2xl font-black mb-4 border-b pb-3">Dashboard & Data Booking</h2>
+            
+            <!-- Statistik Card -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <div class="text-sm font-bold text-stone-500 mb-1">Transaksi Hari Ini</div>
+                    <div class="text-3xl font-black text-stone-800"><?= $total_trx ?></div>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                    <div class="text-sm font-bold text-emerald-600 mb-1">Transaksi Disetujui (Selesai)</div>
+                    <div class="text-3xl font-black text-emerald-700"><?= $trx_selesai ?></div>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                    <div class="text-sm font-bold text-blue-600 mb-1">Total Pelanggan Terdaftar</div>
+                    <div class="text-3xl font-black text-blue-700"><?= $total_pelanggan ?></div>
+                </div>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-stone-100 text-stone-600 border-b">
@@ -108,10 +132,11 @@ $products = mysqli_query($conn, "SELECT * FROM products ORDER BY id_produk DESC"
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-stone-100 text-stone-600 border-b"><tr><th class="p-3">Foto</th><th class="p-3">Nama Alat</th><th class="p-3">Harga</th><th class="p-3">Stok</th><th class="p-3">Aksi</th></tr></thead>
+                    <thead class="bg-stone-100 text-stone-600 border-b"><tr><th class="p-3">ID</th><th class="p-3">Foto</th><th class="p-3">Nama Alat</th><th class="p-3">Harga</th><th class="p-3">Stok</th><th class="p-3">Aksi</th></tr></thead>
                     <tbody>
                         <?php while($row = mysqli_fetch_assoc($products)): ?>
                         <tr class="border-b hover:bg-stone-50">
+                            <td class="p-3 font-bold text-stone-400">#<?= $row['id_produk'] ?></td>
                             <td class="p-2"><img src="<?= $row['gambar'] ?>" class="w-10 h-10 object-cover rounded shadow-sm border" alt="img"></td>
                             <td class="p-3 font-bold"><?= $row['nama_produk'] ?> <span class="text-xs font-normal bg-stone-200 px-1 rounded ml-1"><?= $row['tipe_layanan'] ?></span></td>
                             <td class="p-3">Rp <?= number_format($row['harga'],0,',','.') ?></td> <td class="p-3"><?= $row['stok'] ?></td>
@@ -155,6 +180,27 @@ $products = mysqli_query($conn, "SELECT * FROM products ORDER BY id_produk DESC"
                 document.getElementById('formEdit').scrollIntoView({behavior: "smooth"});
             }
             </script>
+            
+        <?php elseif($tab == 'customers'): ?>
+            <h2 class="text-xl font-black mb-4 border-b pb-3">Data Member Pelanggan</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-stone-100 text-stone-600 border-b">
+                        <tr><th class="p-3">ID</th><th class="p-3">Nama Lengkap</th><th class="p-3">Email</th><th class="p-3">No Telepon</th><th class="p-3">Alamat</th></tr>
+                    </thead>
+                    <tbody>
+                        <?php while($row = mysqli_fetch_assoc($customers)): ?>
+                        <tr class="border-b hover:bg-stone-50">
+                            <td class="p-3 font-bold">#<?= $row['id_pelanggan'] ?></td>
+                            <td class="p-3 font-bold"><?= $row['nama_lengkap'] ?></td>
+                            <td class="p-3 text-stone-500"><?= $row['email'] ?></td>
+                            <td class="p-3"><?= $row['no_telepon'] ?></td>
+                            <td class="p-3 text-xs"><?= $row['alamat'] ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php endif; ?>
     </div>
 </div>

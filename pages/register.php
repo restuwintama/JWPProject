@@ -35,3 +35,13 @@ if (isset($_POST['register'])) {
         </div>
     </form>
 </div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function(e) {
+    let email = document.querySelector("input[name='email']").value;
+    if (!email.includes("@gmail.com")) {
+        alert("Peringatan: Email yang diisi harus valid dan disarankan menggunakan @gmail.com!");
+        e.preventDefault();
+    }
+});
+</script>
