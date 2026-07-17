@@ -14,7 +14,7 @@ $is_admin = ($user_logged_in && $_SESSION['role'] === 'admin');
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-stone-100 text-stone-800 font-sans flex flex-col min-h-screen">
+<body class="bg-stone-100 text-stone-800 font-sans">
 
 <nav class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -47,4 +47,4 @@ $is_admin = ($user_logged_in && $_SESSION['role'] === 'admin');
     </div>
 </nav>
 
-<main class="flex-grow container mx-auto px-4 py-8 fade-in"></main>
+<main class="container mx-auto px-4 py-8 fade-in">
