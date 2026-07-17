@@ -7,12 +7,24 @@ if (isset($_POST['clear_cart'])) {
         $notif = "<div class='bg-red-500 text-white p-3 text-center rounded-xl mb-6'>Keranjang masih kosong!</div>";
     } else {
         $id_pelanggan = $_SESSION['user_id'];
-        $total = 0;
-        foreach($_SESSION['cart'] as $item) { $total += ($item['price'] * $item['qty']); }
+        $subtotal = 0;
+        foreach($_SESSION['cart'] as $item) { $subtotal += ($item['price'] * $item['qty']); }
+        $total = $subtotal + 5000; // Tambah biaya admin
         
         mysqli_query($conn, "INSERT INTO orders (id_pelanggan, total) VALUES ($id_pelanggan, $total)");
-        $_SESSION['cart'] = [];
-        $notif = "<div class='bg-emerald-500 text-white p-3 text-center rounded-xl mb-6'>Pesanan berhasil dibuat. Menunggu konfirmasi admin.</div>";
+        
+        // Simpan data invoice sementara ke session untuk ditampilkan di halaman checkout
+        $_SESSION['invoice'] = [
+            'id' => mysqli_insert_id($conn),
+            'items' => $_SESSION['cart'],
+            'subtotal' => $subtotal,
+            'total' => $total,
+            'date' => date('d-m-Y H:i')
+        ];
+        
+        $_SESSION['cart'] = []; // Kosongkan keranjang
+        echo "<script>window.location.href='?p=checkout';</script>";
+        exit;
     }
 }
 
@@ -60,10 +72,14 @@ $total = 0;
             </table>
         </div>
         
-        <div class="flex justify-between items-center bg-stone-50 p-6 rounded-2xl border border-stone-200">
+        <div class="flex flex-col sm:flex-row justify-between items-center bg-stone-50 p-6 rounded-2xl border border-stone-200">
             <form method="POST"><button type="submit" name="clear_cart" class="text-red-500 hover:underline font-bold text-sm">Kosongkan Keranjang</button></form>
-            <div class="text-xl font-bold">
-                Total Estimasi: <span class="text-emerald-700 font-black text-2xl ml-2">Rp <?= number_format($total,0,',','.') ?></span>
+            <div class="text-right mt-4 sm:mt-0">
+                <div class="text-sm text-stone-500 mb-1">Subtotal Alat: Rp <?= number_format($total,0,',','.') ?></div>
+                <div class="text-sm text-stone-500 mb-2">Biaya Admin: Rp 5.000</div>
+                <div class="text-xl font-bold text-stone-800 bg-white px-6 py-2 rounded-xl shadow-sm border border-stone-100">
+                    Total Estimasi: <span class="text-emerald-700 font-black text-2xl ml-2">Rp <?= number_format($total + 5000,0,',','.') ?></span>
+                </div>
             </div>
         </div>
 
