@@ -11,11 +11,22 @@ if (isset($_POST['clear_cart'])) {
         foreach($_SESSION['cart'] as $item) { $subtotal += ($item['price'] * $item['qty']); }
         $total = $subtotal + 5000; // Tambah biaya admin
         
+        // Insert Data Order
         mysqli_query($conn, "INSERT INTO orders (id_pelanggan, total) VALUES ($id_pelanggan, $total)");
+        $id_pesanan_baru = mysqli_insert_id($conn);
+        
+        // KURANGI STOK PRODUK OTOMATIS
+        foreach($_SESSION['cart'] as $item) {
+            $id_produk = $item['id'];
+            $qty_dibeli = $item['qty'];
+            
+            // Kurangi stok pada database
+            mysqli_query($conn, "UPDATE products SET stok = stok - $qty_dibeli WHERE id_produk = $id_produk");
+        }
         
         // Simpan data invoice sementara ke session untuk ditampilkan di halaman checkout
         $_SESSION['invoice'] = [
-            'id' => mysqli_insert_id($conn),
+            'id' => $id_pesanan_baru,
             'items' => $_SESSION['cart'],
             'subtotal' => $subtotal,
             'total' => $total,

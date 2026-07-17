@@ -47,7 +47,7 @@ $products = mysqli_query($conn, "SELECT * FROM products ORDER BY id_produk DESC"
                 <div class="relative h-48 bg-stone-100 overflow-hidden">
                     <img src="<?= $row['gambar'] ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <?php if($row['tipe_layanan'] == 'Beli'): ?>
-                        <span class="absolute top-3 right-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">Dijual (Beli Putus)</span>
+                        <span class="absolute top-3 right-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">Dijual</span>
                     <?php else: ?>
                         <span class="absolute top-3 right-3 bg-stone-900/80 backdrop-blur text-white text-xs font-bold px-3 py-1 rounded-full shadow">Disewakan</span>
                     <?php endif; ?>
