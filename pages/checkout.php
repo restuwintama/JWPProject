@@ -3,6 +3,10 @@ if (!isset($_SESSION['invoice'])) {
     echo "<script>window.location.href='?p=home';</script>"; exit; 
 }
 $inv = $_SESSION['invoice'];
+
+// Set Timezone agar jam dan tanggal sesuai dengan Indonesia (WIB)
+date_default_timezone_set('Asia/Jakarta');
+$real_time_date = date('d-m-Y H:i'); 
 ?>
 <div class="max-w-3xl mx-auto py-12">
     <div class="bg-white p-10 shadow-2xl border-t-[12px] border-emerald-700 rounded-3xl">
@@ -12,6 +16,8 @@ $inv = $_SESSION['invoice'];
             <div class="inline-block mt-4 bg-stone-100 border border-stone-200 text-stone-700 px-6 py-2 rounded-full font-black text-lg">
                KODE BOOKING: #<?= $inv['id'] ?>
             </div>
+            <p class="text-stone-400 text-sm mt-2">Tanggal Cetak: <?= $real_time_date ?> WIB</p>
+        </div>
             <p class="text-stone-400 text-sm mt-2">Tanggal: <?= $inv['date'] ?></p>
         </div>
         

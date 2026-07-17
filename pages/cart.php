@@ -83,10 +83,26 @@ $total = 0;
             </div>
         </div>
 
-        <div class="mt-8 border-t pt-8">
-            <?php if(isset($_SESSION['user_id'])): ?>
+        <div class="mt-8 border-t border-stone-200 pt-8">
+            <?php if(isset($_SESSION['user_id'])): 
+                // Ambil data user terkini untuk konfirmasi alamat
+                $u_id = $_SESSION['user_id'];
+                $u_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT nama_lengkap, no_telepon, alamat FROM users WHERE id_pelanggan=$u_id"));
+            ?>
+                <div class="bg-blue-50 border border-blue-200 p-6 rounded-2xl mb-6">
+                    <h3 class="font-black text-blue-800 mb-4 border-b border-blue-200 pb-2">📍 Konfirmasi Data Pengambil / Pengiriman</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-900">
+                        <div><span class="font-bold block text-blue-700">Nama Penerima:</span> <?= $u_data['nama_lengkap'] ?></div>
+                        <div><span class="font-bold block text-blue-700">No. HP / WA:</span> <?= $u_data['no_telepon'] ?></div>
+                        <div class="md:col-span-2"><span class="font-bold block text-blue-700">Alamat Terdaftar:</span> <?= $u_data['alamat'] ?></div>
+                    </div>
+                    <div class="mt-4 text-xs font-bold text-blue-600">
+                        * Ingin mengubah alamat atau nomor telepon? <a href="?p=profile" class="underline hover:text-blue-800">Edit Profil Anda di sini</a> sebelum checkout.
+                    </div>
+                </div>
+
                 <form method="POST" class="text-right">
-                    <button type="submit" name="checkout" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-10 rounded-xl transition shadow-lg text-lg">PROSES CHECKOUT</button>
+                    <button type="submit" name="checkout" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-10 rounded-xl transition shadow-lg text-lg">KONFIRMASI & PROSES CHECKOUT</button>
                 </form>
             <?php else: ?>
                 <div class="bg-amber-100 text-amber-800 p-4 rounded-xl text-center font-bold">
