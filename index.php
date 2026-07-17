@@ -12,7 +12,7 @@ if ($page == 'logout') {
 
 include 'header.php';
 
-$allowed_pages = ['home', 'shop', 'cart', 'login', 'register', 'profile', 'admin'];
+$allowed_pages = ['home', 'shop', 'cart', 'login', 'register', 'profile', 'admin', 'checkout'];
 
 if (in_array($page, $allowed_pages)) {
     // Memasukkan isi halaman yang sesuai dari folder 'pages'
