@@ -19,7 +19,10 @@ $is_admin = ($user_logged_in && $_SESSION['role'] === 'admin');
 <nav class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <a href="?p=home" class="flex items-center space-x-2 font-black text-xl tracking-wide">
-            <div class="bg-white text-emerald-700 rounded-full w-8 h-8 flex items-center justify-center">⛰️</div>
+            <div class="bg-white text-emerald-700 rounded-full w-8 h-8 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mountain-icon lucide-mountain"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+            </svg>
+            </div>
             <span>Arunika <span class="font-light">Outdoor</span></span>
         </a>
         <div class="flex items-center space-x-6 text-sm font-medium">
