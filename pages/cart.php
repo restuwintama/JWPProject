@@ -9,22 +9,18 @@ if (isset($_POST['clear_cart'])) {
         $id_pelanggan = $_SESSION['user_id'];
         $subtotal = 0;
         foreach($_SESSION['cart'] as $item) { $subtotal += ($item['price'] * $item['qty']); }
-        $total = $subtotal + 5000; // Tambah biaya admin
+        $total = $subtotal + 5000; 
         
-        // Insert Data Order
         mysqli_query($conn, "INSERT INTO orders (id_pelanggan, total) VALUES ($id_pelanggan, $total)");
         $id_pesanan_baru = mysqli_insert_id($conn);
         
-        // KURANGI STOK PRODUK OTOMATIS
         foreach($_SESSION['cart'] as $item) {
             $id_produk = $item['id'];
             $qty_dibeli = $item['qty'];
             
-            // Kurangi stok pada database
             mysqli_query($conn, "UPDATE products SET stok = stok - $qty_dibeli WHERE id_produk = $id_produk");
         }
         
-        // Simpan data invoice sementara ke session untuk ditampilkan di halaman checkout
         $_SESSION['invoice'] = [
             'id' => $id_pesanan_baru,
             'items' => $_SESSION['cart'],
@@ -33,7 +29,7 @@ if (isset($_POST['clear_cart'])) {
             'date' => date('d-m-Y H:i')
         ];
         
-        $_SESSION['cart'] = []; // Kosongkan keranjang
+        $_SESSION['cart'] = []; 
         echo "<script>window.location.href='?p=checkout';</script>";
         exit;
     }
@@ -96,7 +92,6 @@ $total = 0;
 
         <div class="mt-8 border-t border-stone-200 pt-8">
             <?php if(isset($_SESSION['user_id'])): 
-                // Ambil data user terkini untuk konfirmasi alamat
                 $u_id = $_SESSION['user_id'];
                 $u_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT nama_lengkap, no_telepon, alamat FROM users WHERE id_pelanggan=$u_id"));
             ?>

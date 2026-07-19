@@ -13,7 +13,6 @@ if (isset($_POST['update_profile'])) {
 
     $update_query = "UPDATE users SET nama_lengkap='$nama_lengkap', email='$email', no_telepon='$no_telepon', alamat='$alamat'";
     
-    // Upload Foto Baru
     if (isset($_FILES['foto_profil']) && $_FILES['foto_profil']['error'] === 0) {
         $dir = 'uploads/';
         if (!is_dir($dir)) mkdir($dir, 0777, true);
@@ -34,7 +33,6 @@ if (isset($_POST['update_profile'])) {
     }
 }
 
-// Menutup PHP sebelum masuk HTML agar tidak ada error "Unexpected '<'"
 $user_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE id_pelanggan=$id"));
 ?>
 
@@ -86,7 +84,6 @@ $user_data = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE i
 </div>
 
 <script>
-// Fungsi untuk Toggle (Melihat) Password
 function togglePass(id) {
     let input = document.getElementById(id);
     input.type = input.type === "password" ? "text" : "password";

@@ -5,22 +5,19 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
 $tab = isset($_GET['t']) ? $_GET['t'] : 'orders';
 
-// Fungsi Helper Upload Gambar
 function uploadGambar($file, $old_path) {
     if (isset($file) && $file['error'] === 0) {
         $dir = 'uploads/';
-        if (!is_dir($dir)) mkdir($dir, 0777, true); // Buat folder otomatis
+        if (!is_dir($dir)) mkdir($dir, 0777, true); 
         $filename = $dir . time() . '_' . basename($file['name']);
         if (move_uploaded_file($file['tmp_name'], $filename)) return $filename;
     }
-    return $old_path; // Jika tidak ada foto baru, gunakan foto lama
+    return $old_path; 
 }
 
-// Aksi Konfirmasi Pesanan
 if(isset($_GET['acc'])) { mysqli_query($conn, "UPDATE orders SET status='Disetujui' WHERE id_pesanan=" . $_GET['acc']); echo "<script>window.location.href='?p=admin';</script>"; }
 if(isset($_GET['tolak'])) { mysqli_query($conn, "UPDATE orders SET status='Ditolak' WHERE id_pesanan=" . $_GET['tolak']); echo "<script>window.location.href='?p=admin';</script>"; }
 
-// Aksi CRUD Produk (Tambah, Edit, Hapus)
 if(isset($_POST['add_product'])) {
     $n = $_POST['nama_produk']; $k = $_POST['kategori']; $t = $_POST['tipe_layanan'];
     $h = $_POST['harga']; $s = $_POST['stok']; $d = $_POST['deskripsi']; 
@@ -40,19 +37,16 @@ if(isset($_GET['del_product'])) {
     echo "<script>window.location.href='?p=admin&t=products';</script>";
 }
 
-// Menarik Data
 $orders = mysqli_query($conn, "SELECT o.*, u.nama_lengkap FROM orders o JOIN users u ON o.id_pelanggan = u.id_pelanggan ORDER BY o.tanggal DESC");
 $products = mysqli_query($conn, "SELECT * FROM products ORDER BY id_produk DESC");
 $customers = mysqli_query($conn, "SELECT * FROM users WHERE role='user' ORDER BY id_pelanggan DESC");
 
-// Query Statistik
 $total_trx = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM orders WHERE DATE(tanggal) = CURDATE()"));
 $trx_selesai = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM orders WHERE status='Disetujui'"));
 $total_pelanggan = mysqli_num_rows($customers);
 ?>
 
 <div class="flex flex-col md:flex-row gap-6">
-    <!-- Sidebar -->
     <div class="w-full md:w-64 bg-stone-900 text-white rounded-2xl p-5 shadow-lg">
         <h3 class="font-black text-xl mb-4 border-b border-stone-700 pb-3">DASHBOARD</h3>
         <ul class="space-y-2">
@@ -62,12 +56,10 @@ $total_pelanggan = mysqli_num_rows($customers);
         </ul>
     </div>
 
-    <!-- Content Area -->
     <div class="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
         <?php if($tab == 'orders'): ?>
             <h2 class="text-2xl font-black mb-4 border-b pb-3">Dashboard & Data Booking</h2>
             
-            <!-- Statistik Card -->
             <div class="grid grid-cols-3 gap-4 mb-6">
                 <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
                     <div class="text-sm font-bold text-stone-500 mb-1">Transaksi Hari Ini</div>
@@ -118,7 +110,6 @@ $total_pelanggan = mysqli_num_rows($customers);
                 <button onclick="document.getElementById('formAdd').classList.toggle('hidden')" class="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold shadow text-sm">+ Tambah Baru</button>
             </div>
 
-            <!-- Form Tambah (Hidden) -->
             <form id="formAdd" method="POST" enctype="multipart/form-data" class="hidden bg-stone-50 p-4 rounded-xl border mb-6 grid grid-cols-2 gap-4">
                 <div><label class="text-xs font-bold block mb-1">Nama Alat</label><input type="text" name="nama_produk" required class="w-full border p-2 rounded"></div>
                 <div><label class="text-xs font-bold block mb-1">Kategori</label><input type="text" name="kategori" required class="w-full border p-2 rounded"></div>
@@ -150,11 +141,10 @@ $total_pelanggan = mysqli_num_rows($customers);
                 </table>
             </div>
 
-            <!-- Form Edit -->
             <form id="formEdit" method="POST" enctype="multipart/form-data" class="hidden mt-6 bg-blue-50 p-4 rounded-xl border border-blue-200 grid grid-cols-2 gap-4">
                 <div class="col-span-2 font-black text-blue-800 border-b border-blue-200 pb-2">Edit Produk</div>
                 <input type="hidden" name="id_produk" id="e_id">
-                <input type="hidden" name="gambar_lama" id="e_gbr_lama"> <!-- Simpan path gambar lama -->
+                <input type="hidden" name="gambar_lama" id="e_gbr_lama">
                 <div><label class="text-xs font-bold block mb-1">Nama Alat</label><input type="text" name="nama_produk" id="e_nama" required class="w-full border p-2 rounded"></div>
                 <div><label class="text-xs font-bold block mb-1">Kategori</label><input type="text" name="kategori" id="e_kat" required class="w-full border p-2 rounded"></div>
                 <div><label class="text-xs font-bold block mb-1">Tipe</label><select name="tipe_layanan" id="e_tipe" class="w-full border p-2 rounded"><option>Sewa</option><option>Beli</option></select></div>

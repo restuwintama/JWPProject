@@ -11,7 +11,6 @@ if (isset($_POST['login'])) {
         $_SESSION['role'] = $user['role'];
         $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
         
-        // Redirect berdasarkan role
         if ($user['role'] === 'admin') {
             echo "<script>window.location.href='?p=admin';</script>";
         } else {
@@ -40,7 +39,7 @@ if (isset($_POST['login'])) {
         <p id="error_msg" class="text-red-500 text-xs font-bold hidden">Tolong isi semua kolom form di atas!</p>
         <button type="submit" name="login" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold">MASUK</button>
     </form>
-    <p class="mt-6 text-center text-sm font-medium">Belum punya akun? <a href="?p=register" class="text-emerald-600 hover:underline">Daftar Member</a></p>
+    <p class="mt-6 text-center text-sm font-medium">Belum punya akun? <a href="?p=register" class="text-emerald-600 hover:underline">Daftar</a></p>
 </div>
 
 <script>

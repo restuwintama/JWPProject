@@ -4,7 +4,6 @@ if (!isset($_SESSION['invoice'])) {
 }
 $inv = $_SESSION['invoice'];
 
-// Set Timezone agar jam dan tanggal sesuai dengan Indonesia (WIB)
 date_default_timezone_set('Asia/Jakarta');
 $real_time_date = date('d-m-Y H:i'); 
 ?>
